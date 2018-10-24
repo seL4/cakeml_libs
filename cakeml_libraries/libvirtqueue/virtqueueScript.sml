@@ -158,6 +158,12 @@ val select_def = (append_prog o process_topdecs) `
     fun select vqs = List.find (fn vq => poll vq = Ok 1) vqs
 `;
 
+val select_loop_def = (append_prog o process_topdecs) `
+    fun select_loop f vqs = case select vqs of
+        None => ()
+    |   Some vq => (f vq; select_loop f vqs)
+`;
+
 val _ = ml_prog_update (close_module NONE);
 
 val _ = export_theory ();
