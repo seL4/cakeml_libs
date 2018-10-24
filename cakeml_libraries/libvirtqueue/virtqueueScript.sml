@@ -121,11 +121,11 @@ val driver_send_def = (append_prog o process_topdecs) `
     fun driver_send virtqueue message = let
         val word_size = Utils.get_word_size ()
         val message_len = Word8Array.length message;
-        val buf_size = 1 + word_size + 4 + message_len;
+        val buf_size = 1 + (2 * word_size) + message_len;
         val buf = Word8Array.array buf_size (Word8.fromInt 0);
         val _ = Word8Array.copy (virtqueue_ptr virtqueue) 0 word_size buf 1;
-        val _ = Word8Array.copy (Utils.int_to_bytes message_len 4) 0 4 buf (1 + word_size);
-        val _ = Word8Array.copy message 0 message_len buf (1 + word_size + 4);
+        val _ = Word8Array.copy (Utils.int_to_bytes message_len word_size) 0 word_size buf (1 + word_size);
+        val _ = Word8Array.copy message 0 message_len buf (1 + (2 * word_size));
         val _ = #(virtqueue_driver_send) "" buf;
         in get_result buf (fn buf => ()) end
 `;
