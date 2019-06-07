@@ -19,8 +19,8 @@ val _ = ml_prog_update (open_module "Utils");
 
 val fail_def = (append_prog o process_topdecs) `
     fun fail msg = let
-        val _ = TextIO.print (msg ^ "\n");
-        val _ = #(fail) "" (Word8Array.array 0 (Word8.fromInt 0));
+        val u = TextIO.print (msg ^ "\n");
+        val u = #(fail) "" (Word8Array.array 0 (Word8.fromInt 0));
         in () end;
 `;
 
@@ -62,10 +62,10 @@ val int_to_bytes_at_def = (append_prog o process_topdecs) `
             if i = len then
                 ()
             else
-                let val _ = Word8Array.update array i (Word8.fromInt (w div divisor));
+                let val u = Word8Array.update array i (Word8.fromInt (w div divisor));
                 in loop (i + 1) (divisor * 256)
                 end
-        val _ = loop off 1;
+        val u = loop off 1;
         in array end;
 `;
 
@@ -114,7 +114,7 @@ val string_to_bytes_def = (append_prog o process_topdecs) `
   fun string_to_bytes str = let
     val len = String.size str;
     val result = Word8Array.array len (Word8.fromInt 0);
-    val _ = Word8Array.copyVec str 0 len result 0;
+    val u = Word8Array.copyVec str 0 len result 0;
     in result end;
 `;
 
@@ -122,14 +122,14 @@ val string_to_bytes_def = (append_prog o process_topdecs) `
 val word8_array_orb_def = (append_prog o process_topdecs) `
     fun word8_array_orb arr1 arr2 = let
         val len = Word8Array.length arr1;
-        val _ =
+        val u =
             if len <> Word8Array.length arr2 then
                 fail "word8_array_orb: length mismatch"
             else
                 ();
         val bytes = List.genlist (fn i => (i, Word8.orb (Word8Array.sub arr1 i) (Word8Array.sub arr2 i))) len;
         val result = Word8Array.array len (Word8.fromInt 0);
-        val _ = List.app (fn x => Word8Array.update result (fst x) (snd x)) bytes;
+        val u = List.app (fn x => Word8Array.update result (fst x) (snd x)) bytes;
         in
             result
         end
