@@ -13,12 +13,14 @@
 open preamble basis bigStepTheory semanticPrimitivesTheory ml_translatorTheory
      ml_translatorLib ml_progLib cfLib;
 
-fun derive_eval_thm_bytes for_eval v_name e len = let
+structure camkesUtilsLib = struct
+  fun derive_eval_thm_bytes for_eval v_name e len = let
     val th = get_ml_prog_state () |> get_thm
     val th = MATCH_MP ml_progTheory.ML_code_Dlet_var th
            |> REWRITE_RULE [ml_progTheory.ML_code_env_def]
+    val env = get_ml_prog_state() |> get_env
     val th = th |> CONV_RULE(RESORT_FORALL_CONV(sort_vars["e","s3"]))
-              |> SPEC e
+              |> SPEC e |> CONV_RULE SWAP_FORALL_CONV |> SPEC env
     val st = th |> SPEC_ALL |> concl |> dest_imp |> #1 |> strip_comb |> #2 |> el 1
     val new_st = ``^st with refs := ^st.refs ++ [W8array (REPLICATE ^(numSyntax.term_of_int len) 0w)]``
     val goal = th |> SPEC new_st |> SPEC_ALL |> concl |> dest_imp |> fst
@@ -30,7 +32,4 @@ fun derive_eval_thm_bytes for_eval v_name e len = let
     val v_tm = v_thm |> concl |> strip_comb |> #2 |> last
     val v_def = define_abbrev false v_name v_tm
     in v_thm |> REWRITE_RULE [GSYM v_def] end
-
-structure camkesUtils = struct
-    val derive_eval_thm_bytes = derive_eval_thm_bytes
 end

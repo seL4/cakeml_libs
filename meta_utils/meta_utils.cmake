@@ -22,9 +22,9 @@ cmake_minimum_required(VERSION 3.8.2)
 function(DeclareCakeMLMetaUtils src_dir output_dir target_name target_files_var output_dir_var)
     set(abs_output_dir "${CMAKE_CURRENT_BINARY_DIR}/${output_dir}")
     set(holmakefile_src "${src_dir}/Holmakefile")
-    set(camkes_utils_src "${src_dir}/camkesUtils.sml")
+    set(camkes_utils_src "${src_dir}/camkesUtilsLib.sml")
     set(holmakefile_output "${abs_output_dir}/Holmakefile")
-    set(camkes_utils_output "${abs_output_dir}/camkesUtils.sml")
+    set(camkes_utils_output "${abs_output_dir}/camkesUtilsLib.sml")
     add_custom_command(OUTPUT ${holmakefile_output} ${camkes_utils_output}
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${holmakefile_src} ${holmakefile_output}
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${camkes_utils_src} ${camkes_utils_output}
