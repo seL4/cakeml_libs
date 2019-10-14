@@ -9,6 +9,10 @@ set(LIBCAKEML_PATH "${CMAKE_CURRENT_LIST_DIR}/libcakeml_helpers.cmake" CACHE STR
 set(CAKEML_META_PATH "${CMAKE_CURRENT_LIST_DIR}/meta_utils/meta_utils.cmake" CACHE STRING "")
 mark_as_advanced(CAKEML_LIBS_DIR LIBCAKEML_PATH CAKEML_META_PATH)
 
+macro(cakeml_libs_import_libsel4_cakeml)
+	add_subdirectory(${CAKEML_LIBS_DIR}/libsel4_cakeml libsel4_cakeml)
+endmacro()
+
 include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(
     cakeml_libs
