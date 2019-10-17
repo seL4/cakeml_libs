@@ -51,8 +51,9 @@ add_custom_command(
     COMMAND
         PYTHONPATH=${libsel4_source}/tools "${PYTHON3}" "${gen_script}" ${buffer} ${mcs} -a
         "${KernelSel4Arch}"
-        --word-size ${KernelWordSize} -o ${output}
+        --word-size ${KernelWordSize} -o ${output}.tmp
         --invocation-source ${CMAKE_CURRENT_BINARY_DIR}/${filter_invocation_cfile} ${interface_xmls}
+    COMMAND cmake -E copy_if_different ${output}.tmp ${output}
     DEPENDS
         ${CMAKE_CURRENT_BINARY_DIR}/${filter_invocation_cfile}
         sel4
