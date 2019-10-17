@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sel4/sel4.h>
 
 void ffifail(unsigned char *c, long clen, unsigned char *a, long alen)
 {
@@ -19,8 +20,12 @@ void ffifail(unsigned char *c, long clen, unsigned char *a, long alen)
     exit(-1);
 }
 
-void cml_exit(int arg)
-{
-    printf("Called cml_exit\n");
-    exit(arg);
+// void cml_exit(int arg)
+// {
+//     printf("Called cml_exit\n");
+//     exit(arg);
+// }
+
+void fficrml_debug_putchar (unsigned char *c, long clen, unsigned char *a, long alen) {
+    seL4_DebugPutChar(a[0]);
 }

@@ -12,6 +12,7 @@
 
 #include <sel4/sel4.h>
 #include <string.h>
+#include <utils/util.h>
 
 #define FFI_SUCCESS 0
 
