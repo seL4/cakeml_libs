@@ -312,18 +312,13 @@ def extract_invocation_labels(source_string):
         mapping[variant.name] = i
 
     # seL4 arch invocation labels should be offset by the number of invocations that came before
-    sel4_ai_offset = len(mapping)
+    sel4_ai_offset = mapping["nInvocationLabels"]
     for (i, sel4_ai) in enumerate(sel4_arch_invocation_label.type.values.enumerators):
         mapping[sel4_ai.name] = sel4_ai_offset + i
-        if i == 0:
-            # Check that the 0th enum variant is set to the LAST variant of invocation_label
-            assert sel4_ai.value.name == "nInvocationLabels"
 
-    ai_offset = len(mapping)
+    ai_offset = mapping["nSeL4ArchInvocationLabels"]
     for (i, ai) in enumerate(arch_invocation_label.type.values.enumerators):
         mapping[ai.name] = ai_offset + i
-        if i == 0:
-            assert ai.value.name == "nSeL4ArchInvocationLabels"
 
     return mapping
 
