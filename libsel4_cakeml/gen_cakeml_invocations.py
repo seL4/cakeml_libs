@@ -153,6 +153,7 @@ CAKEML_WHITELIST = {
     "seL4_TCB_Configure",
     "seL4_TCB_Resume",
     "seL4_TCB_SetSchedParams",
+    "seL4_TCB_Suspend",
     "seL4_TCB_WriteRegisters",
     "seL4_ASIDPool_Assign",
     "seL4_PageTable_Map",
