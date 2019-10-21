@@ -14,6 +14,64 @@
 #include <string.h>
 #include <utils/util.h>
 
+// FIXME: guard debug mode
+#include <stdio.h>
+#define DEBUG_INVOCATION(...) printf(__VA_ARGS__)
+
+static const char *invocation_string(int label) {
+#define CASE(inv) case inv: return #inv;
+    switch(label) {
+    CASE(InvalidInvocation)
+    CASE(UntypedRetype)
+    CASE(TCBReadRegisters)
+    CASE(TCBWriteRegisters)
+    CASE(TCBCopyRegisters)
+    CASE(TCBConfigure)
+    CASE(TCBSetPriority)
+    CASE(TCBSetMCPriority)
+    CASE(TCBSetSchedParams)
+    CASE(TCBSetIPCBuffer)
+    CASE(TCBSetSpace)
+    CASE(TCBSuspend)
+    CASE(TCBResume)
+    CASE(TCBBindNotification)
+    CASE(TCBUnbindNotification)
+    CASE(TCBSetTLSBase)
+    CASE(CNodeRevoke)
+    CASE(CNodeDelete)
+    CASE(CNodeCancelBadgedSends)
+    CASE(CNodeCopy)
+    CASE(CNodeMint)
+    CASE(CNodeMove)
+    CASE(CNodeMutate)
+    CASE(CNodeRotate)
+    CASE(CNodeSaveCaller)
+    CASE(IRQIssueIRQHandler)
+    CASE(IRQAckIRQ)
+    CASE(IRQSetIRQHandler)
+    CASE(IRQClearIRQHandler)
+    CASE(DomainSetSet)
+    CASE(ARMPDClean_Data)
+    CASE(ARMPDInvalidate_Data)
+    CASE(ARMPDCleanInvalidate_Data)
+    CASE(ARMPDUnify_Instruction)
+    CASE(ARMPageTableMap)
+    CASE(ARMPageTableUnmap)
+    CASE(ARMPageMap)
+    CASE(ARMPageUnmap)
+    CASE(ARMPageClean_Data)
+    CASE(ARMPageInvalidate_Data)
+    CASE(ARMPageCleanInvalidate_Data)
+    CASE(ARMPageUnify_Instruction)
+    CASE(ARMPageGetAddress)
+    CASE(ARMASIDControlMakePool)
+    CASE(ARMASIDPoolAssign)
+    CASE(ARMIRQIssueIRQHandlerTrigger)
+#undef CASE
+    default: return "unknown invocation";
+    }
+};
+
 #define FFI_SUCCESS 0
 
 void ffiseL4_MessageInfo_new(unsigned char *c, long clen, unsigned char *a,
@@ -59,9 +117,20 @@ void ffiseL4_CallWithMRs(unsigned char *c, long clen, unsigned char *a,
     offset += sizeof(mr2);
     memcpy(&mr3, a + offset, sizeof(mr3));
 
+    DEBUG_INVOCATION("seL4_CallWithMRs(service=0x%zx, [label=%d(%s), caps=%d + %d, len=%d], MRs=0x%zx 0x%zx 0x%zx 0x%zx) ",
+                     _service,
+                     (int)seL4_MessageInfo_get_label(tag),
+                     invocation_string(seL4_MessageInfo_get_label(tag)),
+                     (int)seL4_MessageInfo_get_capsUnwrapped(tag),
+                     (int)seL4_MessageInfo_get_extraCaps(tag),
+                     (int)seL4_MessageInfo_get_length(tag),
+                     mr0, mr2, mr2, mr3);
+
     seL4_MessageInfo_t output_tag =
         seL4_CallWithMRs(_service, tag, &mr0, &mr1, &mr2, &mr3);
     seL4_Error result = (seL4_Error)seL4_MessageInfo_get_label(output_tag);
+
+    DEBUG_INVOCATION("   -->   0x%zx\n", result);
 
     offset = 0;
     memcpy(a + offset, &result, sizeof(result));
