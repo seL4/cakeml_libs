@@ -32,7 +32,7 @@ fun {{name}} {% if all_params == [] %}(){% else %}{{ all_params | map(attribute=
     {% endif %}
     (* Make the system call *)
     (* {{method_id}} = {{method_id_num}} *)
-    val tag = SeL4.seL4_MessageInfo_new {{method_id_num}} {{cap_params | length}} {{input_expressions | length}}
+    val tag = SeL4.seL4_MessageInfo_new {{method_id_num}} {{cap_params[1:] | length}} {{input_expressions | length}}
     {% if cakeml_v2_compatible %}
     (* Using CakeML 2 compatibility: no output parameters are supported! *)
     val err_code = SeL4.seL4_CallWithMRs {{cap_params[0].name}} tag{% for i in range(num_mrs) %} mr{{i}}{% endfor %}
