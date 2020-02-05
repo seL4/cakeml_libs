@@ -124,7 +124,7 @@ void ffiseL4_CallWithMRs(unsigned char *c, long clen, unsigned char *a,
                      (int)seL4_MessageInfo_get_capsUnwrapped(tag),
                      (int)seL4_MessageInfo_get_extraCaps(tag),
                      (int)seL4_MessageInfo_get_length(tag),
-                     mr0, mr2, mr2, mr3);
+                     mr0, mr1, mr2, mr3);
 
     seL4_MessageInfo_t output_tag =
         seL4_CallWithMRs(_service, tag, &mr0, &mr1, &mr2, &mr3);
